@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import { PrismaClient } from "./lib/prisma";
 import { cors } from "hono/cors";
+import { ProductSchema } from "./modules/product/schema";
 
 const prisma = new PrismaClient();
 
@@ -73,6 +74,31 @@ app.patch("/products/:id", async (c) => {
   } catch (error) {
     return c.json({ error: "Product not found or update failed" }, 404);
   }
+});
+
+const route = createRoute({
+  method: "get",
+  path: "/products",
+
+  responses: {
+    200: {
+      content: {
+        "application/json": {
+          schema: ProductSchema,
+        },
+      },
+      description: "Retrieve the user",
+    },
+  },
+});
+
+app.openapi(route, (c) => {
+  const { id } = c.req.valid("param");
+  return c.json({
+    id,
+    age: 20,
+    name: "Ultra-man",
+  });
 });
 
 export default app;

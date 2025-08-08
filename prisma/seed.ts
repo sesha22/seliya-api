@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 
 async function main() {
   for (const seedSeliya of dataSeliya) {
-    const condiment = await prisma.condiment.upsert({
+    const seliya = await prisma.condiment.upsert({
       where: { id: seedSeliya.id },
       update: {},
       create: {
@@ -15,7 +15,7 @@ async function main() {
       },
     });
 
-    console.log(`Seliya: ${Seliya.name}`);
+    console.log(`Seliya: ${seliya.name}`);
   }
 }
 
