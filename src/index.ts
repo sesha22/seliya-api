@@ -1,104 +1,40 @@
-import { Hono } from "hono";
-import { PrismaClient } from "./lib/prisma";
 import { cors } from "hono/cors";
-import { ProductSchema } from "./modules/product/schema";
+import { createRoute, OpenAPIHono } from "@hono/zod-openapi";
+import { Scalar } from "@scalar/hono-api-reference";
 
-const prisma = new PrismaClient();
+import { prisma } from "./lib/prisma";
+import { ProductsSchema } from "./modules/product/schema";
 
-const app = new Hono();
+const app = new OpenAPIHono();
 
 app.use(cors());
 
-app.get("/", (c) => {
-  return c.json({
-    message: "Seliya Backend API",
-  });
-});
-
-app.get("/products", async (c) => {
-  const products = await prisma.product.findMany();
-  return c.json({ products });
-});
-
-app.get("/products/:id", async (c) => {
-  const id = Number(c.req.param("id"));
-
-  const product = await prisma.product.findUnique({
-    where: { id },
-  });
-
-  return c.json({ product });
-});
-
-app.post("/products", async (c) => {
-  const body = await c.req.json();
-
-  const product = await prisma.product.create({
-    data: {
-      name: body.name,
-      spicy: body.spicy,
-    },
-  });
-
-  return c.json(product);
-});
-
-app.delete("/products/:id", async (c) => {
-  const id = Number(c.req.param("id"));
-
-  try {
-    const deleted = await prisma.product.delete({
-      where: { id },
-    });
-
-    return c.json(deleted);
-  } catch (error) {
-    return c.json({ error: "Product not found" }, 404);
-  }
-});
-
-app.patch("/products/:id", async (c) => {
-  const id = Number(c.req.param("id"));
-  const body = await c.req.json();
-
-  try {
-    const updated = await prisma.product.update({
-      where: { id },
-      data: {
-        name: body.name,
-        spicy: body.spicy,
+app.openapi(
+  createRoute({
+    method: "get",
+    path: "/products",
+    responses: {
+      200: {
+        content: { "application/json": { schema: ProductsSchema } },
+        description: "Get all products",
       },
-    });
-
-    return c.json(updated);
-  } catch (error) {
-    return c.json({ error: "Product not found or update failed" }, 404);
-  }
-});
-
-const route = createRoute({
-  method: "get",
-  path: "/products",
-
-  responses: {
-    200: {
-      content: {
-        "application/json": {
-          schema: ProductSchema,
-        },
-      },
-      description: "Retrieve the user",
     },
+  }),
+  async (c) => {
+    const products = await prisma.product.findMany();
+
+    return c.json(products);
+  }
+);
+
+app.doc("/openapi.json", {
+  openapi: "3.0.0",
+  info: {
+    version: "1.0.0",
+    title: "Flozka API",
   },
 });
 
-app.openapi(route, (c) => {
-  const { id } = c.req.valid("param");
-  return c.json({
-    id,
-    age: 20,
-    name: "Ultra-man",
-  });
-});
+app.get("/", Scalar({ url: "/openapi.json" }));
 
 export default app;
