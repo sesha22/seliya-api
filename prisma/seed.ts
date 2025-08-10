@@ -1,21 +1,24 @@
 import { PrismaClient } from "../src/generated/prisma";
+import { createSlug } from "../src/lib/slug";
 
-import { dataSeliya } from "../src/data/seliya";
+import { dataSeedProducts } from "../src/data/products";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  for (const seedSeliya of dataSeliya) {
-    const seliya = await prisma.condiment.upsert({
-      where: { id: seedSeliya.id },
+  for (const seedProduct of dataSeedProducts) {
+    const slug = createSlug(seedProduct.name);
+
+    const product = await prisma.product.upsert({
+      where: { slug },
       update: {},
       create: {
-        name: seedSeliya.name,
-        spicy: seedSeliya.spicy,
+        ...seedProduct,
+        slug,
       },
     });
 
-    console.log(`Seliya: ${seliya.name}`);
+    console.log(`Product : ${product.name} (${product.slug})`);
   }
 }
 
