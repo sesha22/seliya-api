@@ -6,28 +6,31 @@ import { dataSeedProducts } from "../src/data/products";
 const prisma = new PrismaClient();
 
 async function main() {
-  for (const seedProduct of dataSeedProducts) {
-    const slug = createSlug(seedProduct.name);
+	for (const seedProduct of dataSeedProducts) {
+		const slug = createSlug(seedProduct.name);
 
-    const product = await prisma.product.upsert({
-      where: { slug },
-      update: {},
-      create: {
-        ...seedProduct,
-        slug,
-      },
-    });
+		const product = await prisma.product.upsert({
+			where: { slug },
+			update: {
+				...seedProduct,
+				slug,
+			},
+			create: {
+				...seedProduct,
+				slug,
+			},
+		});
 
-    console.log(`Product : ${product.name} (${product.slug})`);
-  }
+		console.log(`Product : ${product.name} (${product.slug})`);
+	}
 }
 
 main()
-  .then(async () => {
-    await prisma.$disconnect();
-  })
-  .catch(async (e) => {
-    console.error(e);
-    await prisma.$disconnect();
-    process.exit(1);
-  });
+	.then(async () => {
+		await prisma.$disconnect();
+	})
+	.catch(async (e) => {
+		console.error(e);
+		await prisma.$disconnect();
+		process.exit(1);
+	});

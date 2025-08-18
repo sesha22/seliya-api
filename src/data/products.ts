@@ -12,10 +12,10 @@ export const dataSeedProducts: SeedProduct[] = [
     name: "Sambal Terasi Pedas 250gr",
     description:
       "Sambal terasi asli dengan cita rasa pedas mantap dan aroma khas terasi pilihan. Dibuat dari cabai segar, terasi berkualitas, dan bumbu alami tanpa pengawet. Cocok untuk menemani nasi panas, gorengan, hingga lauk pauk favorit Anda.",
-    imageUrl: "https://example.com/images/sambal-terasi-250gr.jpg",
+    imageUrl:
+      "https://asset.kompas.com/crops/T5tcZX2QbELoIvtZeyVXOIq_KZI=/0x0:1000x667/1200x800/data/photo/2023/07/06/64a628ed595eb.jpeg",
     price: 25000,
   },
-  // ...existing code...
   {
     slug: "sambal-matah-bali-200gr",
     name: "Sambal Matah Bali 200gr",
