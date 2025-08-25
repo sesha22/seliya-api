@@ -13,7 +13,7 @@ export const dataSeedProducts: SeedProduct[] = [
     description:
       "Sambal terasi asli dengan cita rasa pedas mantap dan aroma khas terasi pilihan. Dibuat dari cabai segar, terasi berkualitas, dan bumbu alami tanpa pengawet. Cocok untuk menemani nasi panas, gorengan, hingga lauk pauk favorit Anda.",
     imageUrl:
-      "https://asset.kompas.com/crops/T5tcZX2QbELoIvtZeyVXOIq_KZI=/0x0:1000x667/1200x800/data/photo/2023/07/06/64a628ed595eb.jpeg",
+      "https://pasarsegar.co.id/wp-content/uploads/2020/07/images-67.jpegbuat",
     price: 25000,
   },
   {
