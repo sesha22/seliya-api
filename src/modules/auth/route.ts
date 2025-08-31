@@ -64,3 +64,27 @@ authRoute.openapi(
     return c.json(user);
   }
 );
+
+authRoute.openapi(
+  createRoute({
+    method: "post",
+    path: "/me",
+
+    responses: {
+      200: {
+        content: { "application/json": { schema: PrivateUserSchema } },
+        description: "Login Success",
+      },
+      404: { description: "User Not Found" },
+    },
+  }),
+
+  async (c) => {
+    const user = await prisma.user.findFirst();
+    if (!user) {
+      return c.notFound();
+    }
+
+    return c.json(user);
+  }
+);
