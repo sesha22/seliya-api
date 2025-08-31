@@ -12,7 +12,7 @@ userRoute.openapi(
       200: {
         content: {
           "application/json": {
-            schema: UserSchema,
+            schema: UsersSchema,
           },
         },
         description: "Get all products",
