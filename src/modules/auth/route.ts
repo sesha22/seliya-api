@@ -123,27 +123,7 @@ authRoute.openapi(
   }),
 
   async (c) => {
-    const authHeader = c.req.header("Authorization");
-    if (!authHeader) {
-      return c.json({ message: "Authorization Header is Required" }, 401);
-    }
-
-    const token = authHeader.split(" ")[1];
-    if (!token) {
-      return c.json({ message: "Token is Required" }, 401);
-    }
-
-    const decodedPayload = await verifyToken(token);
-    if (!decodedPayload) {
-      return c.json({ message: "Invalid Token" }, 401);
-    }
-
-    const user = await prisma.user.findUnique({
-      where: { id: decodedPayload.sub },
-    });
-    if (!user) {
-      return c.json({ message: "User is No Longer Availabel" }, 401);
-    }
+    const user = c.get("user");
 
     return c.json(user);
   }
