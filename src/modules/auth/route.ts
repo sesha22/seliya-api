@@ -3,7 +3,7 @@ import { prisma } from "../../lib/prisma";
 import { AuthLoginSchema, AuthRegisterSchema } from "./schema";
 import { PrivateUserSchema } from "../user/schema";
 import { bundlerModuleNameResolver } from "typescript";
-import { hashPassword } from "../../lib/password";
+import { hashPassword, verifyPassword } from "../../lib/password";
 
 export const authRoute = new OpenAPIHono();
 
@@ -69,6 +69,7 @@ authRoute.openapi(
         content: { "application/json": { schema: PrivateUserSchema } },
         description: "Login Success",
       },
+      400: { description: "Login Failed" },
       404: { description: "User Not Found" },
     },
   }),
@@ -77,12 +78,26 @@ authRoute.openapi(
     const body = c.req.valid("json");
     const user = await prisma.user.findUnique({
       where: { email: body.email },
+      include: { password: true },
     });
     if (!user) {
       return c.notFound();
     }
+    if (!user.password) {
+      return c.notFound();
+    }
 
-    return c.json(user);
+    const isPasswordMatch = await verifyPassword(
+      body.password,
+      user.password.hash
+    );
+    if (!isPasswordMatch) {
+      return c.json({ message: "Password Invalid" }, 400);
+    }
+
+    const { password, ...userWithoutPassword } = user;
+
+    return c.json(userWithoutPassword);
   }
 );
 
