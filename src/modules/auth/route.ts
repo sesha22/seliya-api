@@ -1,6 +1,7 @@
-import { createRoute, OpenAPIHono } from "@hono/zod-openapi";
+import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
 import { prisma } from "../../lib/prisma";
 import {
+  AuthHeaderSchema,
   AuthLoginSchema,
   AuthLoginSuccessSchema,
   AuthRegisterSchema,
@@ -110,6 +111,7 @@ authRoute.openapi(
   createRoute({
     method: "post",
     path: "/me",
+    request: { headers: AuthHeaderSchema },
 
     responses: {
       200: {
