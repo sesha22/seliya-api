@@ -10,6 +10,7 @@ import { PrivateUserSchema } from "../user/schema";
 import { bundlerModuleNameResolver } from "typescript";
 import { hashPassword, verifyPassword } from "../../lib/password";
 import { signToken, verifyToken } from "../../lib/token";
+import { checkAuthorized } from "./middleware";
 
 export const authRoute = new OpenAPIHono();
 
@@ -109,10 +110,10 @@ authRoute.openapi(
 
 authRoute.openapi(
   createRoute({
-    method: "post",
+    method: "get",
     path: "/me",
     request: { headers: AuthHeaderSchema },
-
+    middleware: checkAuthorized,
     responses: {
       200: {
         content: { "application/json": { schema: PrivateUserSchema } },

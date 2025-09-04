@@ -1,5 +1,5 @@
 import { createRoute, OpenAPIHono } from "@hono/zod-openapi";
-import { UserSchema, UsersSchema, UsersIdSchema } from "./schema";
+import { UserSchema, UsersSchema, UserIdSchema } from "./schema";
 import { prisma } from "../../lib/prisma";
 
 export const userRoute = new OpenAPIHono();
@@ -35,7 +35,7 @@ userRoute.openapi(
     method: "get",
     path: "/{id}",
     request: {
-      params: UsersIdSchema,
+      params: UserIdSchema,
     },
 
     responses: {

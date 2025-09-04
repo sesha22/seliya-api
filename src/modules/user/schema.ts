@@ -13,6 +13,9 @@ export const PrivateUserSchema = BaseUserSchema;
 export const PublicUserSchema = BaseUserSchema.omit({
   email: true,
 });
+
+export const UserSchema = PublicUserSchema;
+
 export const UsersSchema = z.array(PublicUserSchema);
 
 export const UserIdSchema = z.object({
